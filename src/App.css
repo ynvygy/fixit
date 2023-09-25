@@ -1,0 +1,239 @@
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.brand-container {
+  display: flex;
+  align-items: right;
+  margin-left: 25%;
+}
+
+.submit-button {
+  margin-top: 20px;
+  width: 26%;
+  color: white;
+  font-weight: bold;
+  background-color: #15265C;
+  height: 6vh;
+  box-shadow: 0 2px 4px rgba(0, 0, 2, 1);
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.connected-text {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px;
+  background-color: #15265C;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 2);
+}
+
+.margin-top {
+  margin-top: 10px;
+}
+
+.input-form-container {
+  margin-top: 20px;
+  max-width: 350px
+}
+
+.input-form-margin-left-40 {
+  margin-left: 40%
+}
+
+.input-form-margin-left-33 {
+  margin-left: 33%
+}
+
+.main-container {
+  margin-left: 50px !important;
+  margin-top: 20px !important;
+  max-width: 100%
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+  max-width: 1000px;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+.box {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px; 
+  border-radius: 15px; 
+  border: 1px solid black; 
+}
+
+.box-text {
+  color: white;
+  font-size: 24px; 
+  text-shadow: 1px 0px 5px black;
+  padding: 5px; 
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 5);
+}
+
+.destinations {
+  opacity: 0.9
+}
+
+.clickable {
+  cursor: pointer;
+  border: 3px solid #0047AB; 
+  box-shadow: 0 0 10px 5px rgba(108, 122, 137, 1) !important; 
+  border-radius: 100px;
+  background-image: url("../public/map.jpg");
+}
+
+.clickable p {
+  font-size: 40px;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 5);
+}
+
+ul {
+  list-style: none;
+}
+
+.basic-stats {
+  margin-top: 30px;
+}
+
+.advanced-button {
+  border-radius: 0 !important;
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 30px;
+  border: 1px solid blue !important;
+}
+
+.radio-setup {
+  margin-right: 5px;
+}
+
+.comments-text {
+  margin-top: 50px;
+  margin-bottom: 30px
+}
+
+.by-text {
+  font-size: 14px;
+  margin-left: 10px;
+  color: grey;
+}
+
+.likes-text {
+  font-size: 18px !important;
+  color: #1877f2;
+  margin-right: 5%
+}
+
+.issue-image {
+  width: 133px
+}
+
+.likes-container {
+  margin-top: 10px !important;
+  display: flex;
+  align-items: center;
+  margin-left: 50%
+}
+
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  color: #1877f2; 
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  margin-right: 3%
+}
+
+.close-container {
+  margin-top: 10px !important;
+  display: flex;
+  align-items: center;
+  margin-left: 80%
+}
+
+.close-button {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  color: #5A5A5A; 
+}
+
+.fixit-button {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 100px;
+  background-color: transparent;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  padding: 5px;
+}
+
+.like-button:hover {
+  color: #1656c1;
+}
+
+.fa-thumbs-up {
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.left-text {
+  flex: 1;
+  text-align: left;
+}
+
+.right-text {
+  flex: 1;
+  text-align: right;
+}
+
+.add-comment {
+  margin-top: 10px !important;
+  color: white;
+}
+
+.add-comment-container {
+  margin-left: 1px !important;
+}
+
+.add-comment-text {
+  border-radius: 20px;
+}
+
+.uploaded-file {
+  max-width: 100%; 
+  max-height: 100%; 
+  overflow: hidden;
+}
+
+.uploaded-file img {
+  width: 100%; 
+  height: auto; 
+}
