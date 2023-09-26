@@ -7,24 +7,8 @@ import BasicStats from './components/BasicStats';
 import MainPage from './components/MainPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { create } from 'ipfs-http-client'
-import { Buffer } from 'buffer';
-import { Navbar, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Nav } from 'react-bootstrap';
 import fixitContractData from './data/fixit-contract.json';
-
-const projectId = process.env.REACT_APP_INFURA_API_KEY
-const projectSecret = process.env.REACT_APP_INFURA_API_SECRET
-const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
-const client = create({
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
-  apiPath: '/api/v0',
-  headers: {
-    authorization: auth,
-  }
-})
 
 function App() {
   const [provider, setProvider] = useState(null);
@@ -104,40 +88,6 @@ function App() {
 
     loadBlockchainData();
   }, [savedWalletAddress, fixitAddress, fixitAbi]);
-
-  const uploadToIPFS = async (event) => {
-    event.preventDefault()
-    const file = event.target.files[0]
-    if (typeof file !== 'undefined') {
-      try {
-        const result = await client.add(file)
-        console.log(result)
-        setImage(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
-        setIpfsFixIt(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
-        //setImage(`https://ipfs.infura.io/ipfs/testme`)
-        //setIpfsFixIt(`https://ipfs.infura.io/ipfs/testme`)
-      } catch (error){
-        console.log("ipfs image upload error: ", error)
-      }
-    }
-  }
-
-  const uploadFixProofToIPFS = async (event) => {
-    event.preventDefault()
-    const file = event.target.files[0]
-    if (typeof file !== 'undefined') {
-      try {
-        const result = await client.add(file)
-        console.log(result)
-        setImage(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
-        setIpfsFixItProof(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
-        //setImage(`https://ipfs.infura.io/ipfs/testme`)
-        //setIpfsFixIt(`https://ipfs.infura.io/ipfs/testme`)
-      } catch (error){
-        console.log("ipfs image upload error: ", error)
-      }
-    }
-  }
 
   const connectWallet = async () => {
     try {
@@ -231,19 +181,6 @@ function App() {
     }
   };
 
-  const getIssues = async () => {
-    try {
-      if (fixitContract) {
-        const getIssues = await fixitContract.getIssues();
-
-        console.log(getIssues);
-        setIssues(getIssues.slice(1))
-      }
-    } catch (error) {
-      console.error('Error creating issue:', error);
-    }
-  };
-
   return (
     <div className="container mx-auto main-container">
       {!account ? <MainPage connectWallet={connectWallet}/> :
@@ -274,13 +211,14 @@ function App() {
                     selectedIssue={selectedIssue} 
                     setSelectedIssue={setSelectedIssue}
                     handleSubmit={handleSubmit}
-                    uploadFixProofToIPFS={uploadFixProofToIPFS}
                     fixIssue={fixIssue}
                     fixitContract={fixitContract}
                     account={account}
                     comments={comments}
                     setComments={setComments}
                     ipfsFixItProof={ipfsFixItProof}
+                    setImage={setImage}
+                    setIpfsFixItProof={setIpfsFixItProof}
                   /> :
                   <CreateFixIt 
                     handleSubmit={handleSubmit}
@@ -289,7 +227,6 @@ function App() {
                     description={description}
                     setDescription={setDescription}
                     setLocation={setLocation}
-                    uploadToIPFS={uploadToIPFS}
                     ipfsFixIt={ipfsFixIt}
                     createIssue={createIssue}
                     setImage={setImage}

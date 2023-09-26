@@ -27,7 +27,7 @@ contract FixIt {
     mapping(uint256 => Issue) public issues;
     mapping(uint256 => Comment[]) public issueComments;
 
-    uint256 public issueCounter;
+    uint256 public issueCounter = 1;
 
     event IssueCreated(
         uint256 indexed issueId,
@@ -45,7 +45,6 @@ contract FixIt {
         string memory _ipfsFixIt,
         uint256 _timestamp
     ) external {
-        issueCounter++;
         issues[issueCounter] = Issue({
             issueId: issueCounter,
             creator: msg.sender,
@@ -61,6 +60,7 @@ contract FixIt {
             ipfsFixProof: ""
             //fixedTimestamp: 0
         });
+        issueCounter++;
         emit IssueCreated(issueCounter, msg.sender, _title);
     }
 
@@ -89,7 +89,7 @@ contract FixIt {
     function getIssues() public view returns (Issue[] memory) {
         Issue[] memory allIssues = new Issue[](issueCounter);
 
-        for (uint256 i = 0; i < issueCounter; i++) {
+        for (uint256 i = 1; i < issueCounter; i++) {
             allIssues[i] = issues[i];
         }
 

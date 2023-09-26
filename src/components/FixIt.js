@@ -1,8 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import { Buffer } from 'buffer';
+import { create } from 'ipfs-http-client'
+import { InfinitySpin } from 'react-loader-spinner';
 
-const FixIt = ({handleSubmit, uploadFixProofToIPFS, fixIssue, fixitContract, selectedIssue, setSelectedIssue, account, comments, setComments, ipfsFixItProof}) => {
+const FixIt = ({handleSubmit, fixIssue, fixitContract, selectedIssue, setSelectedIssue, account, comments, setComments, ipfsFixItProof, setImage, setIpfsFixItProof}) => {
   const [newComment, setNewComment] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const projectId = process.env.REACT_APP_INFURA_API_KEY
+  const projectSecret = process.env.REACT_APP_INFURA_API_SECRET
+  const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+  const client = create({
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+    apiPath: '/api/v0',
+    headers: {
+      authorization: auth,
+    }
+  })
 
   const handleCommentAddition = async () => {
     if (!newComment) {
@@ -48,6 +65,27 @@ const FixIt = ({handleSubmit, uploadFixProofToIPFS, fixIssue, fixitContract, sel
     setSelectedIssue({})
   }
 
+  const uploadFixProofToIPFS = async (event) => {
+    setLoading(true)
+    event.preventDefault()
+    const file = event.target.files[0]
+    if (typeof file !== 'undefined') {
+      try {
+        const result = await client.add(file)
+        console.log(result)
+        setImage(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
+        setIpfsFixItProof(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
+        //setImage(`https://ipfs.infura.io/ipfs/testme`)
+        //setIpfsFixIt(`https://ipfs.infura.io/ipfs/testme`)
+      } catch (error){
+        console.log("ipfs image upload error: ", error)
+      }
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+  }
+
   return(
     <>
       <div className="close-container">
@@ -68,6 +106,7 @@ const FixIt = ({handleSubmit, uploadFixProofToIPFS, fixIssue, fixitContract, sel
         </button>
       </div>
       <p>{selectedIssue.description}</p>
+
       {showForm && (
         <form onSubmit={handleSubmit} className="form">
           <div className="mb-3">
@@ -79,9 +118,18 @@ const FixIt = ({handleSubmit, uploadFixProofToIPFS, fixIssue, fixitContract, sel
               className="form-control"
             />
           </div>
+          {loading ? (
+            <div className="loading-container">
+              <InfinitySpin 
+                width='200'
+                color="#4fa94d"
+              />
+            </div>
+          ) : (
           <div className="uploaded-file">
             <img src={ipfsFixItProof} />
           </div>
+          )}
           <button type="submit" className="btn btn-primary input-form-margin-left-33 clickable margin-top" onClick={fixIssue}>Fix Issue</button>
         </form>
       )}

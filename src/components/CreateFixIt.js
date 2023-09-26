@@ -1,11 +1,28 @@
 import React, { useState } from 'react';
+import { Buffer } from 'buffer';
 import { Web3Storage } from 'web3.storage';
 import { File, NFTStorage } from 'nft.storage';
+import { create } from 'ipfs-http-client'
+import { InfinitySpin } from 'react-loader-spinner';
 
-const CreateFixIt = ({handleSubmit, title, setTitle, description, setDescription, location, setLocation, uploadToIPFS, ipfsFixIt, createIssue, setImage, setIpfsFixIt, setSelectedLocation}) => {
+const CreateFixIt = ({handleSubmit, title, setTitle, description, setDescription, location, setLocation, ipfsFixIt, createIssue, setImage, setIpfsFixIt, setSelectedLocation}) => {
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState(0);
+  const [loading, setLoading] = useState(false);
   const options = ['NFT.storage (default)', 'Web3.storage', 'IPFS (using Infura)'];
+
+  const projectId = process.env.REACT_APP_INFURA_API_KEY
+  const projectSecret = process.env.REACT_APP_INFURA_API_SECRET
+  const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+  const client = create({
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+    apiPath: '/api/v0',
+    headers: {
+      authorization: auth,
+    }
+  })
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);
@@ -16,12 +33,33 @@ const CreateFixIt = ({handleSubmit, title, setTitle, description, setDescription
   };
 
   const handleUpload = (event) => {
+    setLoading(true)
     if (selectedOption == 0) {
       handleNftStorageUpload(event)
     } else if (selectedOption == 1) {
       handleWebStorageUpload(event)
     } else {
       uploadToIPFS(event);
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+  }
+
+  const uploadToIPFS = async (event) => {
+    event.preventDefault()
+    const file = event.target.files[0]
+    if (typeof file !== 'undefined') {
+      try {
+        const result = await client.add(file)
+        console.log(result)
+        setImage(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
+        setIpfsFixIt(`https://ipfs.io/ipfs/${result.path}?filename=${file.name}`)
+        //setImage(`https://ipfs.infura.io/ipfs/testme`)
+        //setIpfsFixIt(`https://ipfs.infura.io/ipfs/testme`)
+      } catch (error){
+        console.log("ipfs image upload error: ", error)
+      }
     }
   }
 
@@ -68,7 +106,7 @@ const CreateFixIt = ({handleSubmit, title, setTitle, description, setDescription
 
       <div className="close-container">
         <button onClick={handleClose} className="close-button">
-          <i class="fa fa-window-close"></i>Close
+          <i className="fa fa-window-close"></i>Close
         </button>
       </div>
       <h2 className="mb-4 input-form-margin-left-40">FixIt</h2>
@@ -112,10 +150,19 @@ const CreateFixIt = ({handleSubmit, title, setTitle, description, setDescription
         />
       </div>
 
-      <div className="uploaded-file">
-        <img src={ipfsFixIt} />
-      </div>
-    
+      {loading ? (
+        <div className="loading-container">
+          <InfinitySpin 
+            width='200'
+            color="#4fa94d"
+          />
+        </div>
+      ) : (
+        <div className="uploaded-file">
+          <img src={ipfsFixIt} />
+        </div>
+      )}
+
       <button className="btn btn-block advanced-button dropdown-toggle" onClick={toggleOptions}>Advanced</button>
       {showOptions && (
         <>
